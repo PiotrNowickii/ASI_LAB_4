@@ -1,0 +1,29 @@
+name: CI/CD Pipeline for ML Model Training
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  train-model:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Krok 1: Checkout repozytorium
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      # Krok Zaloguj się do Docker Hub
+      - name: Log in Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_LOG }}
+          password: ${{ secrets.DOCKER_PASS }}
+      # Krok 3: Zbuduj i zpushuj image
+      - name: Build and push image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: s24667/asi_lab_4:latest
+
